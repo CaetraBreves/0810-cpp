@@ -47,9 +47,9 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
         cout << (*clientes)[tempCarta].conta << "\n";
         cout << (*clientes)[tempCarta].prodConsumidos << "\n";
         if((*clientes)[tempCarta].pago == true){
-            cout << "Cartao pago (true) \n"
+            cout << "Cartao pago (true) \n";
         }else{
-            cout << "Cartao nao pago (false) \n"
+            cout << "Cartao nao pago (false) \n";
         }
         cout << "\n";
 }
@@ -82,16 +82,9 @@ void EntradaCliente(Carta (*clientes)[MaxCartoes], int (*countClient)) {
 
         (*clientes)[*countClient] = tempCarta;
         
-
+        cout << "\n\n";
         cout << "cliente n " << (*countClient) << " registrado" << "\n";
          
-        cout << "a-------------------- \n";
-            cout << (*countClient) << "\n";
-            cout <<  (*clientes)[*countClient].id << "\n";
-            cout <<  (*clientes)[*countClient].conta << "\n";
-            cout <<  (*clientes)[*countClient].prodConsumidos<< "\n";
-            cout << "\n";
-        
 }
 
 void VerfDespesas(Carta (*clientes)[MaxCartoes]){
@@ -193,7 +186,7 @@ void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCart
     cout << "Insira o codigo do produto que deseja inserir.\n";
     cin >> prodCod;
 
-    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false;)
+    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false)
     {
        if ((*produtos)[i].cod == prodCod)
        {
