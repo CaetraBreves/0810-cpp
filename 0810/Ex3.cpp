@@ -4,9 +4,6 @@ using namespace std;
 const int MaxProdutos = 2;
 const int MaxCartoes = 600;
 
-// CURRENT-STATE:_FINAL.
-// IF THERE'S ANYTHING MISSING NOTIFY ME.
-//@CaetraBreves
 
 /*
 =========================STRUCTS======================
@@ -14,16 +11,23 @@ const int MaxCartoes = 600;
 */
 struct Produto
 {
-    int cod;
-    string descProd;
-    double preco;
+    
+    int cod = 0;
+    string descProd = "NULL";
+    double preco = 0;
+};
+
+struct Consumo {
+    int quantidade = 0;
+    Produto produtoss;
 };
 
 struct Carta
 {
-    int id;
-    int prodConsumidos;
-    double conta;
+    int id = 0;
+    int prodConsumidos = 0;
+    Consumo consumos[10];
+    double conta = 0;
     bool pago = false;
 };
 
@@ -33,6 +37,15 @@ struct Carta
 */
 void ClientDataView(Carta (*clientes)[MaxCartoes]){
         int tempCarta = 0;
+        int opc = 0;
+        int numDoConsumo;
+        int gCount = 0;
+
+        int count;
+
+        bool verf = false;
+        
+        
 
         cout << "=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X= \n";
          cout << "\n";
@@ -40,12 +53,69 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
          cout << "\n";
          cout << "=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X=X= \n";
          cout << "\n";
-         cin >> tempCarta;
-        
+         cin >> tempCarta; 
+
+         count = (*clientes)[tempCarta].prodConsumidos;
+         cout << count << "\n";
+         
          cout << "CLIENT DATA" << "\n";
-        cout << (*clientes)[tempCarta].id << "\n";
-        cout << (*clientes)[tempCarta].conta << "\n";
-        cout << (*clientes)[tempCarta].prodConsumidos << "\n";
+        cout << "ID: " << (*clientes)[tempCarta].id << "\n";
+        cout << "CONTA: " << (*clientes)[tempCarta].conta << "\n";
+        cout << "prodConsumidos: " << (*clientes)[tempCarta].prodConsumidos << "\n";
+        cout << "==================================================================== " << "\n";
+              
+        do
+        {
+            cout << "1- Para ver um consumo || 2- Para ver todos os consumos \n";
+            cin >> opc;
+
+            switch (opc)
+            {
+            case 1:
+                cout << "Insira o consumo que deseja conferir:  \n"; //funcionou?
+                cin >> numDoConsumo;
+
+                if (numDoConsumo > (*clientes)[tempCarta].prodConsumidos)
+                {
+                    cout << "Insira um numero de consumo valido \n";
+                }else{
+
+                    cout << "--------------------------------\n";
+                    cout << "Consumo n " << numDoConsumo << " do cliente:"  << tempCarta <<"\n";
+                    cout << "COD do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[numDoConsumo].produtoss.cod << "\n";
+                    cout << "Descricao do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[numDoConsumo].produtoss.descProd << "\n";
+                    cout << "preco do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[numDoConsumo].produtoss.preco << "\n";
+                    cout << "--------------------------------------------------------------\n";
+                    cout << "Quantidade do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[numDoConsumo].quantidade << "\n";
+                    cout << "--------------------------------\n";
+                    verf = true;
+                }
+                
+            break;
+            case 2:
+                for (int i = 0; i < (*clientes)[MaxProdutos].prodConsumidos; i++) //Não funcionou
+                {
+                    cout << "\n";
+                    cout << "--------------------------------\n";
+                    cout << "Consumo n " << i << " do cliente: "  << tempCarta <<"\n";
+                    cout << "COD do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[i].produtoss.cod << "\n";
+                    cout << "Descricao do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[i].produtoss.descProd << "\n";
+                    cout << "preco do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[i].produtoss.preco << "\n";
+                    cout << "--------------------------------------------------------------\n";
+                    cout << "Quantidade do produto no consumo selecionado: " <<(*clientes)[tempCarta].consumos[i].quantidade << "\n";
+                    cout << "--------------------------------\n";              
+                    cout << "\n";
+                    verf = true;
+                }
+                
+            default:
+
+            break;
+            }
+
+        } while (verf == false);
+        
+        verf = false;
         if((*clientes)[tempCarta].pago == true){
             cout << "Cartao pago (true) \n";
         }else{
@@ -82,9 +152,9 @@ void EntradaCliente(Carta (*clientes)[MaxCartoes], int (*countClient)) {
 
         (*clientes)[*countClient] = tempCarta;
         
-        cout << "\n\n";
+        cout << "\n";
         cout << "cliente n " << (*countClient) << " registrado" << "\n";
-         
+         cout << "\n";
 }
 
 void VerfDespesas(Carta (*clientes)[MaxCartoes]){
@@ -176,6 +246,8 @@ void ListVizNumero(Produto (*produtos)[MaxProdutos])
 void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCartoes]){
     int prodCod = 0;
     int clientID = 0;
+    int count = (*clientes)[clientID].prodConsumidos;
+    
 
     bool verf = false;
     
@@ -186,13 +258,43 @@ void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCart
     cout << "Insira o codigo do produto que deseja inserir.\n";
     cin >> prodCod;
 
-    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false)
+    cout << "insira a quantidade do produto. \n";
+    cin >> (*clientes)[clientID].consumos->quantidade; 
+
+    
+
+    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false) 
     {
-       if ((*produtos)[i].cod == prodCod)
+       if ( prodCod == (*produtos)[i].cod)
        {
 
-        (*clientes)[clientID].prodConsumidos++;
-        (*clientes)[clientID].conta = (*clientes)[clientID].conta + (*produtos)[i].preco;
+        cout << (*produtos)[i].cod << "\n";
+        cout << prodCod << "\n";
+        cout << count << "\n";
+
+
+        
+        for (int y = 0; y < MaxProdutos; y++)
+        {
+            if ((*produtos)[y].cod == prodCod)
+            {
+                (*clientes)[clientID].consumos[count].produtoss.cod = (*produtos)[y].cod; 
+                cout << "A: " <<(*clientes)[clientID].consumos[count].produtoss.cod << "\n";
+
+                (*clientes)[clientID].consumos[count].produtoss.descProd = (*produtos)[y].descProd; 
+                cout << "B: "<<(*clientes)[clientID].consumos[count].produtoss.descProd << "\n";
+        
+                (*clientes)[clientID].consumos[count].produtoss.preco = (*produtos)[y].preco; 
+                cout << "C: "<<(*clientes)[clientID].consumos[count].produtoss.preco << "\n";
+            }      
+        }
+
+
+        
+        (*clientes)[clientID].conta = (*clientes)[clientID].conta + (*produtos)[i].preco * (*clientes)[clientID].consumos->quantidade;
+
+       (*clientes)[clientID].prodConsumidos++;
+       count = (*clientes)[clientID].prodConsumidos++;
        
         verf = true;
        }
@@ -284,7 +386,6 @@ int main()
         break;
         case 4:
             InserirConsumos(&produtos, &clientes);
-
         break;
         case 5:
             VerfDespesas(&clientes);
