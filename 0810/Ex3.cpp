@@ -27,6 +27,7 @@ struct Carta
     int id = 0;
     int prodConsumidos = 0;
     Consumo consumos[10];
+    int nConsumos = 0;
     double conta = 0;
     bool pago = false;
 };
@@ -63,6 +64,12 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
         cout << "CONTA: " << (*clientes)[tempCarta].conta << "\n";
         cout << "prodConsumidos: " << (*clientes)[tempCarta].prodConsumidos << "\n";
         cout << "==================================================================== " << "\n";
+        if((*clientes)[tempCarta].pago == true){
+            cout << "Cartao pago (true) \n";
+        }else{
+            cout << "Cartao nao pago (false) \n";
+        }
+        cout << "\n";
               
         do
         {
@@ -72,7 +79,7 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
             switch (opc)
             {
             case 1:
-                cout << "Insira o consumo que deseja conferir:  \n"; //funcionou?
+                cout << "Insira o consumo que deseja conferir:  \n";
                 cin >> numDoConsumo;
 
                 if (numDoConsumo > (*clientes)[tempCarta].prodConsumidos)
@@ -93,8 +100,10 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
                 
             break;
             case 2:
-                for (int i = 0; i < (*clientes)[MaxProdutos].prodConsumidos; i++) //Não funcionou
+
+                for (int i = 0; i < (*clientes)[tempCarta].prodConsumidos; i++)
                 {
+
                     cout << "\n";
                     cout << "--------------------------------\n";
                     cout << "Consumo n " << i << " do cliente: "  << tempCarta <<"\n";
@@ -107,6 +116,7 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
                     cout << "\n";
                     verf = true;
                 }
+                
                 
             default:
 
@@ -174,7 +184,7 @@ void Listagem(Produto (*produtos)[MaxProdutos])
     {
         Produto produto;
 
-        cout << "Insira o codico do produto: " << i << "\n";
+        cout << "Insira o codigo do produto: " << i << "\n";
         cin >> produto.cod;
 
         cout << "Insira a descricao do produto: " << i << "\n";
@@ -246,7 +256,7 @@ void ListVizNumero(Produto (*produtos)[MaxProdutos])
 void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCartoes]){
     int prodCod = 0;
     int clientID = 0;
-    int count = (*clientes)[clientID].prodConsumidos;
+    
     
 
     bool verf = false;
@@ -260,41 +270,39 @@ void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCart
 
     cout << "insira a quantidade do produto. \n";
     cin >> (*clientes)[clientID].consumos->quantidade; 
+    cout << (*clientes)[clientID].consumos->quantidade << "\n"; 
+    
 
     
 
-    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false) 
+    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false)  
     {
-       if ( prodCod == (*produtos)[i].cod)
+       if ( prodCod == (*produtos)[i].cod) 
        {
 
-        cout << (*produtos)[i].cod << "\n";
-        cout << prodCod << "\n";
-        cout << count << "\n";
-
-
-        
         for (int y = 0; y < MaxProdutos; y++)
         {
             if ((*produtos)[y].cod == prodCod)
             {
-                (*clientes)[clientID].consumos[count].produtoss.cod = (*produtos)[y].cod; 
-                cout << "A: " <<(*clientes)[clientID].consumos[count].produtoss.cod << "\n";
+                (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.cod = (*produtos)[y].cod; 
+                cout << "A: " <<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.cod << "\n";
 
-                (*clientes)[clientID].consumos[count].produtoss.descProd = (*produtos)[y].descProd; 
-                cout << "B: "<<(*clientes)[clientID].consumos[count].produtoss.descProd << "\n";
+                (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.descProd = (*produtos)[y].descProd; 
+                cout << "B: "<<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.descProd << "\n";
         
-                (*clientes)[clientID].consumos[count].produtoss.preco = (*produtos)[y].preco; 
-                cout << "C: "<<(*clientes)[clientID].consumos[count].produtoss.preco << "\n";
+                (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.preco = (*produtos)[y].preco; 
+                cout << "C: "<<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.preco << "\n";
+
+                
             }      
         }
 
 
-        
+        (*clientes)[clientID].prodConsumidos++;
         (*clientes)[clientID].conta = (*clientes)[clientID].conta + (*produtos)[i].preco * (*clientes)[clientID].consumos->quantidade;
 
-       (*clientes)[clientID].prodConsumidos++;
-       count = (*clientes)[clientID].prodConsumidos++;
+       
+       
        
         verf = true;
        }
