@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-const int MaxProdutos = 2;
+const int MaxProdutos = 10;
 const int MaxCartoes = 600;
 
 
@@ -40,7 +40,7 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
         int tempCarta = 0;
         int opc = 0;
         int numDoConsumo;
-        int gCount = 0;
+        int quantityCount = 0;
 
         int count;
 
@@ -62,7 +62,13 @@ void ClientDataView(Carta (*clientes)[MaxCartoes]){
          cout << "CLIENT DATA" << "\n";
         cout << "ID: " << (*clientes)[tempCarta].id << "\n";
         cout << "CONTA: " << (*clientes)[tempCarta].conta << "\n";
-        cout << "prodConsumidos: " << (*clientes)[tempCarta].prodConsumidos << "\n";
+        cout << "Consumos: " << (*clientes)[tempCarta].prodConsumidos << "\n";
+        cout << "Quantidade de produtos total: ";
+        for (int i = 0; i < MaxProdutos; i++)
+        {
+           quantityCount = quantityCount + (*clientes)[tempCarta].consumos[i].quantidade;
+        }
+        
         cout << "==================================================================== " << "\n";
         if((*clientes)[tempCarta].pago == true){
             cout << "Cartao pago (true) \n";
@@ -256,7 +262,7 @@ void ListVizNumero(Produto (*produtos)[MaxProdutos])
 void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCartoes]){
     int prodCod = 0;
     int clientID = 0;
-    
+    int tempQuant = 0;
     
 
     bool verf = false;
@@ -268,38 +274,48 @@ void InserirConsumos(Produto (*produtos)[MaxProdutos], Carta (*clientes)[MaxCart
     cout << "Insira o codigo do produto que deseja inserir.\n";
     cin >> prodCod;
 
-    cout << "insira a quantidade do produto. \n";
-    cin >> (*clientes)[clientID].consumos->quantidade; 
-    cout << (*clientes)[clientID].consumos->quantidade << "\n"; 
-    
-
-    
-
-    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false)  
+    do //para não preencher acima do limite do cartão
     {
-       if ( prodCod == (*produtos)[i].cod) 
+        cout << "insira a quantidade do produto. \n";
+        cin >> tempQuant; 
+
+        if (tempQuant > 10)
+        {
+            cout << "insira uma quantidade Valida \n\n";
+        }
+        
+    } while (tempQuant > 10);;
+     
+
+    (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].quantidade = tempQuant;
+    //(*clientes)[clientID].consumos->quantidade Está sempre a escrever em cima do 1º
+    
+
+    
+
+    for (int i = 0; i < MaxProdutos; i++ && (*clientes)[clientID].pago == false)  //ver se o prod é valido e se o cartão está pago
+    {
+       if ( prodCod == (*produtos)[i].cod) //Encontrar o produto
        {
 
-        for (int y = 0; y < MaxProdutos; y++)
+        for (int y = 0; y < MaxProdutos; y++)// Não havia construtor a passar no (*produtos) assim, corro array dos produtos verificando se realmente correspondem (evitando reescrever o mesmo espaço)
         {
-            if ((*produtos)[y].cod == prodCod)
+            if ((*produtos)[y].cod == prodCod)//Encontrar o produto
             {
                 (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.cod = (*produtos)[y].cod; 
-                cout << "A: " <<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.cod << "\n";
 
                 (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.descProd = (*produtos)[y].descProd; 
-                cout << "B: "<<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.descProd << "\n";
-        
+                
                 (*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.preco = (*produtos)[y].preco; 
-                cout << "C: "<<(*clientes)[clientID].consumos[(*clientes)[clientID].prodConsumidos].produtoss.preco << "\n";
-
                 
             }      
         }
 
 
         (*clientes)[clientID].prodConsumidos++;
-        (*clientes)[clientID].conta = (*clientes)[clientID].conta + (*produtos)[i].preco * (*clientes)[clientID].consumos->quantidade;
+        (*clientes)[clientID].conta = (*clientes)[clientID].conta + (*produtos)[i].preco * tempQuant;
+
+        
 
        
        
@@ -386,6 +402,7 @@ int main()
 
         case 2:
             ListVizNumero(&produtos);
+            //listar e vizualizar produtos
 
             break;
         case 3:
@@ -409,7 +426,7 @@ int main()
         break;
         case 8:
             ClientDataView(&clientes);
-            //FOR DEBUGING ((NOT REQUIRED IN EXCERSICE))
+            
 
         break;
         default:
